@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Штрих-код Delta Distance</title>
+</head>
+<body>
+    <h1>Генерація штрих-коду Delta Distance</h1>
+    <form action="/generate" method="POST">
+        <label for="data">Введіть дані (цифри, K, L, M, O):</label>
+        <input type="text" id="data" name="data" required>
+        <button type="submit">Згенерувати штрих-код</button>
+    </form>
+
+    <h1>Завантажити зображення штрих-коду для декодування</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <label for="file">Виберіть PNG файл:</label>
+        <input type="file" id="file" name="file" accept=".png" required>
+        <button type="submit">Завантажити файл</button>
+    </form>
+</body>
+</html>
