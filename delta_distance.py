@@ -57,7 +57,7 @@ def create_barcode_image(barcode, file_name="barcode.png", module_width=5, heigh
     print(f"Зображення штрих-коду збережено як {file_name}")
 
 
-data = "26"
-barcode = generate_delta_barcode(data)
-print("Згенерований штрих-код:", barcode)
-create_barcode_image(barcode)
+# data = "26"
+# barcode = generate_delta_barcode(data)
+# print("Згенерований штрих-код:", barcode)
+# create_barcode_image(barcode)

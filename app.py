@@ -1,22 +1,24 @@
 from flask import Flask, render_template, request, send_file
 import os
+from delta_distance import generate_delta_barcode, create_barcode_image
 
 app = Flask(__name__)
 @app.route('/')
-def index():
+def home():
     return render_template('index.html')
 
 @app.route('/generate', methods=['POST'])
 def generate_barcode():
     data = request.form['data']
     if not data:
-        return "Невірні дані. Введіть допустимі символи."
+        return "error"
 
     # Генеруємо штрих-код
-    # barcode = generate_delta_barcode(data)
-    # file_name = create_barcode_image(barcode)
-    # return send_file(file_name, as_attachment=True)
+    barcode = generate_delta_barcode(data)
+    print(barcode)
+    file_name = create_barcode_image(barcode)
     return 'ok'
+    # return send_file(file_name, as_attachment=True)
 
 # Завантаження зображення для декодування
 @app.route('/upload', methods=['POST'])
