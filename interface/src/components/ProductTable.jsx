@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table as AntdTable, Modal, Button, Input } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, DownloadOutlined } from '@ant-design/icons';
 import { getImage, updateProduct, deleteProduct } from '../api/apiService';
 
 const ProductTable = ({ products, updateList }) => {
@@ -43,6 +43,21 @@ const ProductTable = ({ products, updateList }) => {
         }
     };
 
+    const handleDownload = async ({barcode, name}) => {
+        try {
+            const imageBlob = await getImage(barcode);
+            const url = URL.createObjectURL(imageBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${name}_barcode.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error('Error downloading barcode image:', error);
+        }
+    };
+
     const columns = [
         { title: 'Name', dataIndex: 'name', key: 'name' },
         { title: 'Code', dataIndex: 'code', key: 'code' },
@@ -61,6 +76,14 @@ const ProductTable = ({ products, updateList }) => {
             key: 'delete',
             render: (text, record) => (
                 <DeleteOutlined onClick={() => handleDelete(record.id)} style={{ cursor: 'pointer' }} />
+            ),
+        },
+        {
+            title: 'Download Barcode',
+            width: 100,
+            key: 'download',
+            render: (text, record) => (
+                <DownloadOutlined onClick={() => handleDownload(record)} style={{ cursor: 'pointer' }} />
             ),
         },
     ];
@@ -95,9 +118,9 @@ const ProductTable = ({ products, updateList }) => {
                             placeholder="Product price"
                             value={price}
                             onChange={(e) => setPrice(e.target.value)}
-                            style={{ margin: '10px 0' }}
+                            style={{ margin: '10px 0 20px 0' }}
                         />
-                        {barcodeImage && <img src={barcodeImage} alt="Barcode" style={{ width: 400 }} />}
+                        {barcodeImage && <img src={barcodeImage} alt="Barcode" style={{ width: '100%' }} />}
                     </div>
                 )}
             </Modal>

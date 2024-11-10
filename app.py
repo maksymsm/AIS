@@ -70,9 +70,12 @@ def update_product(id):
 @app.route('/api/products/<int:id>', methods=['DELETE'])
 def delete_product(id):
     product = Product.query.get_or_404(id)
+    barcode_path = os.path.join('uploads', product.barcode)
     db.session.delete(product)
     db.session.commit()
-    return jsonify({'message': 'Product deleted successfully'})
+    if os.path.exists(barcode_path):
+        os.remove(barcode_path)
+    return jsonify({'message': 'Product and barcode deleted successfully'})
 
 @app.route('/api/image/<filename>', methods=['GET'])
 def get_image(filename):
@@ -80,6 +83,23 @@ def get_image(filename):
     if os.path.exists(file_path):
         return send_file(file_path, mimetype='image/png')
     return "File not found", 404
+
+@app.route('/api/parse_barcode', methods=['POST'])
+def parse_barcode():
+     if 'file' not in request.files:
+         return jsonify({'message': 'No file part'}), 400
+     file = request.files['file']
+     if file.filename == '':
+         return jsonify({'message': 'No selected file'}), 400
+     if file:
+         file_path = os.path.join('uploads', file.filename)
+         file.save(file_path)
+         try:
+            barcode = read_barcode_image(file_path)
+            decoded_data = decode_delta_barcode(barcode)
+            return jsonify({'decoded_data': decoded_data}), 200
+         finally:
+            os.remove(file_path)
 
 if __name__ == '__main__':
     if not os.path.exists('uploads'):

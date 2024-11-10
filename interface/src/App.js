@@ -27,7 +27,7 @@ const App = () => {
             <Content style={{ padding: '0 50px', height: '100vh' }}>
                 <div className="site-layout-content" style={{ padding: 24, minHeight: 280 }}>
                     <AddProduct updateList={fetchProducts} />
-                    <UploadBarcode setProducts={setProducts} />
+                    <UploadBarcode products={products} />
                     <ProductTable products={products} updateList={fetchProducts} />
                 </div>
             </Content>
