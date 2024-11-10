@@ -71,10 +71,10 @@ def decode_delta_barcode(barcode):
     return ''.join(data)
 
 
-# Використання модулів
-file_name = "barcode.png"
-barcode = read_barcode_image(file_name)
-print("Зчитаний штрих-код:", barcode)
-
-decoded_data = decode_delta_barcode(barcode)
-print("Розшифровані дані:", decoded_data)
+# # Використання модулів
+# file_name = "barcode.png"
+# barcode = read_barcode_image(file_name)
+# print("Зчитаний штрих-код:", barcode)
+#
+# decoded_data = decode_delta_barcode(barcode)
+# print("Розшифровані дані:", decoded_data)
