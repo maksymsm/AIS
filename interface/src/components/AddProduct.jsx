@@ -1,27 +1,33 @@
 import React, { useState } from 'react';
 import { Modal, Input, Button } from 'antd';
+import { addProduct } from '../api/apiService';
 
-const AddProduct = ({ setProducts }) => {
+const AddProduct = ({ updateList }) => {
     const [visible, setVisible] = useState(false);
     const [name, setName] = useState('');
     const [code, setCode] = useState('');
     const [price, setPrice] = useState('');
     const [codeError, setCodeError] = useState('');
 
-    const handleAddProduct = () => {
+    const handleAddProduct = async () => {
         if (code.length !== 4) {
             setCodeError('Product code must be exactly 4 characters long.');
             return;
         }
-        setProducts((prevProducts) => [
-            ...prevProducts,
-            { key: Date.now().toString(), name, code, price, image: './barcode.png' }
-        ]);
-        setVisible(false);
-        setName('');
-        setCode('');
-        setPrice('');
-        setCodeError('');
+
+        const newProduct = { name, code, price };
+
+        try {
+            await addProduct(newProduct);
+            setVisible(false);
+            setName('');
+            setCode('');
+            setPrice('');
+            setCodeError('');
+            await updateList();
+        } catch (error) {
+            console.error('Error adding product:', error);
+        }
     };
 
     const handleCodeChange = (e) => {

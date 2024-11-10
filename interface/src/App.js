@@ -1,28 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from 'antd';
 import ProductTable from './components/ProductTable';
 import UploadBarcode from './components/UploadBarcode';
 import AddProduct from './components/AddProduct';
+import { getProducts } from './api/apiService';
 
 const { Content } = Layout;
 
 const App = () => {
-  const [products, setProducts] = useState([
-    { key: '1', name: 'Iphone 16', code: '26', price: '$999.00', image: './barcode.png' },
-    { key: '2', name: 'Samsung 10', code: 'KM1', price: '$799.00', image: '../../../barcode.png' },
-  ]);
+    const [products, setProducts] = useState([]);
+    const fetchProducts = async () => {
+        try {
+            const data = await getProducts();
+            setProducts(data);
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        }
+    };
 
-  return (
-      <Layout className="layout">
-        <Content style={{ padding: '0 50px' }}>
-          <div className="site-layout-content" style={{ padding: 24, minHeight: 280 }}>
-            <AddProduct setProducts={setProducts}/>
-            <UploadBarcode setProducts={setProducts} />
-            <ProductTable products={products} />
-          </div>
-        </Content>
-      </Layout>
-  );
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+    return (
+        <Layout className="layout">
+            <Content style={{ padding: '0 50px', height: '100vh' }}>
+                <div className="site-layout-content" style={{ padding: 24, minHeight: 280 }}>
+                    <AddProduct updateList={fetchProducts} />
+                    <UploadBarcode setProducts={setProducts} />
+                    <ProductTable products={products} updateList={fetchProducts} />
+                </div>
+            </Content>
+        </Layout>
+    );
 };
 
 export default App;
